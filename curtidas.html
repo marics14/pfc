@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APASBAC</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" href="estilos/styles.css" />
+    <link rel="stylesheet" href="estilos/global.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* Estilos para o menu */
+        .menu {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            background-color: #1693a5;
+        }
+
+        .menu div {
+            display: flex;
+            align-items: center;
+        }
+
+        .menu img {
+            width: 64px;
+        }
+
+        .menu h1 {
+            display: none; /* Esconde o texto do título */
+        }
+
+        .menu ul {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .menu ul li {
+            margin-left: 20px;
+        }
+
+        .menu ul li a {
+            text-decoration: none;
+            color: #333;
+            font-size: 24px; /* Ajusta o tamanho dos ícones */
+        }
+
+        /* Estilos para o container de fotos curtidas */
+        #curtidas-container {
+            padding: 20px;
+        }
+
+        #liked-photos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px; /* Espaço entre as fotos */
+            justify-content: center; /* Centraliza as fotos horizontalmente */
+        }
+
+        .photo-item {
+            width: 150px;
+            text-align: center;
+            position: relative; /* Permite o posicionamento absoluto do botão */
+        }
+
+        .photo-item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .photo-item .select-button {
+            margin-top: 10px; /* Espaço entre a imagem e o botão */
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .photo-item .select-button.selected {
+            background-color: #28a745; /* Cor verde para fotos selecionadas */
+        }
+
+        .photo-item .select-button:hover {
+            background-color: #0056b3;
+        }
+
+        .photo-item .caption {
+            display: none; /* Esconde as legendas */
+        }
+         /* Estilo do botão Avançar */
+         #advance-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #163b2a;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #advance-button:hover {
+            background-color: #618065;
+        }
+    </style>
+</head>
+
+<body>
+
+        <nav class="menu">
+        <div>
+            <img src="img/logo.jpg" alt="Logo" class="logo">
+            <h1>APASBAC</h1>
+        </div>
+                <ul>
+                <li><a href="index.html"><i class="fas fa-images"></i></a></li>
+                <li><a href="curtidas.html"><i class="fas fa-heart"></i></a></li>
+            </ul>
+        </nav>
+  
+    <div id="curtidas-container">
+        <h2>Fotos Curtidas</h2>
+        <div id="liked-photos"></div>
+    </div>
+</header>
+<div id="selecionadas-container">
+    <div id="selected-photos"></div>
+    <button id="advance-button">Avançar</button>
+</div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const likedPhotos = JSON.parse(localStorage.getItem("likedPhotos")) || [];
+            const likedPhotosContainer = document.getElementById("liked-photos");
+
+            // Armazena URLs de fotos já exibidas para evitar duplicações
+            const displayedPhotos = new Set();
+
+            likedPhotos.forEach(photo => {
+                // Verifica se a foto já foi exibida
+                if (!displayedPhotos.has(photo.src)) {
+                    const photoElement = document.createElement("div");
+                    photoElement.classList.add("photo-item");
+                    photoElement.innerHTML = `
+                        <img src="${photo.src}" alt="${photo.caption}">
+                        <button class="select-button" data-src="${photo.src}">Selecionar</button>
+                    `;
+                    likedPhotosContainer.appendChild(photoElement);
+                    displayedPhotos.add(photo.src); // Marca a foto como exibida
+                }
+            });
+
+            // Adiciona evento de clique para os botões de seleção
+            likedPhotosContainer.addEventListener("click", (event) => {
+                if (event.target.classList.contains("select-button")) {
+                    const button = event.target;
+                    const src = button.getAttribute("data-src");
+
+                    // Marca ou desmarca a seleção
+                    button.classList.toggle("selected");
+
+                    // Atualiza o estado de seleção no localStorage
+                    const selectedPhotos = JSON.parse(localStorage.getItem("selectedPhotos")) || [];
+                    if (button.classList.contains("selected")) {
+                        // Adiciona foto selecionada
+                        if (!selectedPhotos.includes(src)) {
+                            selectedPhotos.push(src);
+                        }
+                    } else {
+                        // Remove foto desmarcada
+                        const index = selectedPhotos.indexOf(src);
+                        if (index > -1) {
+                            selectedPhotos.splice(index, 1);
+                        }
+                    }
+                    localStorage.setItem("selectedPhotos", JSON.stringify(selectedPhotos));
+                }
+            });
+            document.addEventListener("DOMContentLoaded", () => {
+            const selectedPhotos = JSON.parse(localStorage.getItem("selectedPhotos")) || [];
+            const selectedPhotosContainer = document.getElementById("selected-photos");
+
+            selectedPhotos.forEach(src => {
+                const photoElement = document.createElement("div");
+                photoElement.classList.add("photo-item");
+                photoElement.innerHTML = `
+                    <img src="${src}" alt="Foto selecionada">
+                `;
+                selectedPhotosContainer.appendChild(photoElement);
+            });
+
+            // Evento de clique no botão Avançar
+            document.getElementById("advance-button").addEventListener("click", () => {
+                // Aqui você pode definir o que acontece quando o botão Avançar é clicado
+                // Por exemplo, redirecionar para uma nova página:
+                window.location.href = "proxima-etapa.html";
+            });
+        });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APASBAC</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" href="estilos/styles.css" />
+    <link rel="stylesheet" href="estilos/global.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="icon" type="img/png" href="img/logo.jpg" />
+    <style>
+        .menu {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            background-color: #1693a5;
+        }
+
+        .menu div {
+            display: flex;
+            align-items: center;
+        }
+
+        .menu h1 {
+            margin-left: 10px;
+            text-align: center;
+        }
+
+        .menu ul {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .menu ul li {
+            margin-left: 20px;
+        }
+
+        .menu ul li a {
+            text-decoration: none;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .swiper-container {
+            margin-top: 20px;
+        }
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            display: none; /* Oculta os botões de navegação */
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .action-buttons button {
+            margin: 0 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="menu">
+            <div>
+                <img src="img/logo.jpg" width="64">
+                <h1>APASBAC</h1>
+            </div>
+            <ul>
+                <li><a href="#" id="liked-photos-button"><i class="fas fa-heart"></i></a></li>
+            </ul>
+        </nav>
+    </header>
+      <!-- Filtro de Categorias -->
+      <div class="filter-container">
+        <label for="category-filter">Filtrar por Categoria:</label>
+        <select id="category-filter">
+            <option value="all">Todos</option>
+            <option value="femea">Fêmea</option>
+            <option value="macho">Macho</option>
+            <option value="pequeno">Porte pequeno</option>
+            <option value="medio">Porte médio</option>
+            <option value="grande">Porte grande</option>
+        </select>
+    </div>
+
+    <div id="container">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" data-index="0" data-category="macho">
+                    <div class="slide-content">
+                        <h2 class="title">Cachorro</h2>
+                        <div class="caption">Cachorro em um dia ensolarado</div>
+                        <img src="img/cachorro7.jpg" alt="Imagem de um cachorro">
+                    </div>
+                </div>
+                <div class="swiper-slide" data-index="1" data-category="femea">
+                    <div class="slide-content">
+                        <h2 class="title">Cachorro</h2>
+                        <img src="img/cachorro8.jpg" alt="Imagem de um cachorro">
+                        <div class="caption">Cachorro brincando na grama</div>
+                    </div>
+                </div>
+                <div class="swiper-slide" data-index="2" data-category="pequeno">
+                    <div class="slide-content">
+                        <h2 class="title">Cachorro</h2>
+                        <img src="img/cachorro3.webp" alt="Imagem de um cachorro">
+                        <div class="caption">Cachorro olhando curioso</div>
+                    </div>
+                </div>
+                <div class="swiper-slide" data-index="3" data-category="grande">
+                    <div class="slide-content">
+                        <h2 class="title">Cachorro</h2>
+                        <img src="img/cachorro4.jpg" alt="Imagem de um cachorro">
+                        <div class="caption">Cachorro com um brinquedo</div>
+                    </div>
+                </div>
+                <div class="swiper-slide" data-index="4" data-category="macho">
+                    <div class="slide-content">
+                        <h2 class="title">Cachorro</h2>
+                        <img src="img/cachorro5.jpg" alt="Imagem de um cachorro">
+                        <div class="caption">Cachorro deitado na grama</div>
+                    </div>
+                </div>
+                <div class="swiper-slide" data-index="5" data-category="femea">
+                    <div class="slide-content">
+                        <h2 class="title">Cachorro</h2>
+                        <img src="img/cachorro6.jpg" alt="Imagem de um cachorro">
+                        <div class="caption">Cachorro correndo no parque</div>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+            <div class="button-container">
+                <div class="action-buttons">
+                    <button id="discard-button">Próximo</button>
+                    <button id="like-button">Curtir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const swiper = new Swiper('.swiper-container', {
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                loop: true // Adiciona loop para navegação contínua
+            });
+
+            const likedPhotosButton = document.getElementById("liked-photos-button");
+            const likeButton = document.getElementById("like-button");
+            const discardButton = document.getElementById("discard-button");
+
+            let likedPhotos = JSON.parse(localStorage.getItem("likedPhotos")) || [];
+
+            likeButton.addEventListener("click", () => {
+                const activeSlide = document.querySelector(".swiper-slide-active");
+                const img = activeSlide.querySelector("img");
+                const title = activeSlide.querySelector(".title").textContent;
+                const caption = activeSlide.querySelector(".caption").textContent;
+
+                const photo = {
+                    src: img.src,
+                    title: title,
+                    caption: caption
+                };
+
+                likedPhotos.push(photo);
+                localStorage.setItem("likedPhotos", JSON.stringify(likedPhotos));
+
+                // Remove the liked photo from the carousel
+                activeSlide.remove();
+                swiper.update();
+
+                alert("Foto curtida!");
+            });
+
+            likedPhotosButton.addEventListener("click", () => {
+                window.location.href = "curtidas.html";
+            });
+
+            discardButton.addEventListener("click", () => {
+                swiper.slideNext();
+            });
+             // Filtrando as categorias
+             const categoryFilter = document.getElementById('category-filter');
+            categoryFilter.addEventListener('change', (event) => {
+                const category = event.target.value;
+                filterSlides(category);
+            });
+
+            function filterSlides(category) {
+                const slides = document.querySelectorAll('.swiper-slide');
+                slides.forEach(slide => {
+                    if (category === 'all' || slide.getAttribute('data-category') === category) {
+                        slide.style.display = ''; // Mostra o slide
+                    } else {
+                        slide.style.display = 'none'; // Esconde o slide
+                    }
+                });
+                swiper.update(); // Atualiza o swiper após o filtro
+            }
+        });
+    </script>
+</body>
+
+</html>
